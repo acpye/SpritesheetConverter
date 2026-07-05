@@ -1,4 +1,4 @@
-﻿using _3DSpritesheetConverter.Managers;
+using _3DSpritesheetConverter.Managers;
 using _3DSpritesheetConverter.ObjectLoaders;
 using _3DSpritesheetConverter.SceneData;
 using ImGuiNET;
@@ -128,9 +128,7 @@ namespace _3DSpritesheetConverter.Scenes
         {
             ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 
-            ImGui.NewFrame();
             BuildDockSpace();
-            ImGui.EndFrame();
         }
 
         private void BuildDockSpace()
