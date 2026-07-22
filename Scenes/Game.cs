@@ -3,12 +3,12 @@ using _3DSpritesheetConverter.ObjectLoaders;
 using _3DSpritesheetConverter.SceneData;
 using _3DSpritesheetConverter.Shaders;
 using ImGuiNET;
+using OpenTK.DearImGui;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using Zenseless.OpenTK.GUI;
 
 namespace _3DSpritesheetConverter.Scenes
 {
@@ -18,7 +18,7 @@ namespace _3DSpritesheetConverter.Scenes
         private Shader _shader;
         private InputHandler _inputHandler;
         private GameGUI _gameGUI;
-        private ImGuiFacade _gui;
+        private ImGuiController _controller;
 
         private FramebufferManager _framebufferManager;
         private ModelBufferManager _modelBufferManager;
@@ -47,8 +47,8 @@ namespace _3DSpritesheetConverter.Scenes
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
-            _gui = new ImGuiFacade(this);
-            _gui.LoadFontDroidSans(16);
+            _controller = new ImGuiController(this);
+
             ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 
             _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
@@ -144,8 +144,10 @@ namespace _3DSpritesheetConverter.Scenes
             GL.ClearColor(new Color4(45, 55, 60, 255));
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
+            _controller.Update((float)args.Time);
             _gameGUI.Render();
-            _gui.Render(ClientSize);
+
+            _controller.Render();
 
             Context.SwapBuffers();
             base.OnRenderFrame(args);
@@ -234,7 +236,7 @@ namespace _3DSpritesheetConverter.Scenes
 
         protected override void OnUnload()
         {
-            _gui?.Dispose();
+            _controller?.Dispose();
 
             if (_sceneContext?.RenderMeshes != null)
             {
